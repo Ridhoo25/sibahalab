@@ -11,6 +11,6 @@
 *.zip
 *.bak
 
-# Skema database: sertakan database.sql, abaikan dump/data lainnya
+# Skema database: sertakan bahalab.sql, abaikan dump/data lainnya
 *.sql
-!database.sql
+!bahalab.sql

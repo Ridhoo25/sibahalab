@@ -39,17 +39,17 @@ Aplikasi web PHP untuk digitalisasi pengelolaan BHP: penerimaan, stok, distribus
 
    Isi `DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME` sesuai pengaturan MySQL lokal.
 
-4. Buat database dan impor `database.sql` (berisi struktur **dan** data terbaru dari database lokal):
+4. Buat database dan impor `bahalab.sql` (berisi struktur **dan** data terbaru dari database lokal):
 
    ```bash
-   mysql -u root -p -e "SOURCE database.sql"
+   mysql -u root -p -e "SOURCE bahalab.sql"
    ```
 
-   atau impor `database.sql` lewat phpMyAdmin.
+   atau impor `bahalab.sql` lewat phpMyAdmin.
 
 5. Jalankan lewat browser: `http://localhost/sibahalab`
 
-> File `database.sql` dibuat dari dump database lokal (`bahalab`) sehingga berisi data nyata.
+> File `bahalab.sql` dibuat dari dump database lokal (`bahalab`) sehingga berisi data nyata.
 > Akun pengguna yang aktif mengikuti data di dump tersebut.
 
 ## Deploy ke Server (Shared Hosting)
@@ -57,13 +57,13 @@ Aplikasi web PHP untuk digitalisasi pengelolaan BHP: penerimaan, stok, distribus
 1. Push project ke repository (lihat bagian Git).
 2. Di server, lakukan `git clone` atau unggah file via FTP.
 3. Jalankan `composer install --no-dev --optimize-autoloader`.
-4. Buat database baru dan impor `database.sql`.
+4. Buat database baru dan impor `bahalab.sql`.
 5. Salin `.env.example` menjadi `.env`, isi kredensial database server.
 6. Pastikan PHP server minimal 8.2.
 
 ### Catatan hosting Apache
 
-- File `.htaccess` sudah disertakan (proteksi file sensitif seperti `.env` dan `database.sql`, menonaktifkan listing direktori).
+- File `.htaccess` sudah disertakan (proteksi file sensitif seperti `.env` dan `bahalab.sql`, menonaktifkan listing direktori).
 - Jika server tidak memakai Apache (mis. Nginx), terapkan aturan proteksi setara secara manual.
 
 ## Git & Push ke GitHub
@@ -72,7 +72,7 @@ File yang sebaiknya di-commit:
 
 - Seluruh kode PHP, `css/`, `js/`, `assets/img/` (logo & kop)
 - `composer.json` **dan** `composer.lock` (versi dependensi terkunci)
-- `database.sql` (dump struktur **+ data lokal**)
+- `bahalab.sql` (dump struktur **+ data lokal**)
 - `.env.example` (template, **bukan** `.env` asli)
 
 File yang otomatis diabaikan `.gitignore`:
@@ -83,10 +83,10 @@ File yang otomatis diabaikan `.gitignore`:
 
 ### ⚠️ Keamanan data
 
-`database.sql` berisi **data kesehatan nyata** (sampel HPV/TB: nama & puskesmas). Pastikan repository GitHub Anda **PRIVATE** agar data ini tidak bocor ke publik. Perbarui dump ini setiap kali data berubah:
+`bahalab.sql` berisi **data kesehatan nyata** (sampel HPV/TB: nama & puskesmas). Pastikan repository GitHub Anda **PRIVATE** agar data ini tidak bocor ke publik. Perbarui dump ini setiap kali data berubah:
 
 ```bash
-mysqldump -u root -p bahalab > database.sql
+mysqldump -u root -p bahalab > bahalab.sql
 ```
 
 ### Alur push pertama

@@ -3,7 +3,7 @@
 # ============================================================
 
 # --- Lindungi file sensitif ---
-<FilesMatch "^(\.env|\.env\.example|composer\.(json|lock)|database\.sql)$">
+<FilesMatch "^(\.env|\.env\.example|composer\.(json|lock)|bahalab\.sql)$">
     Require all denied
 </FilesMatch>
 
