@@ -1,0 +1,16 @@
+# Dependencies
+/vendor/
+/.composer/
+
+# Environment & secrets
+.env
+.env.local
+*.env.local
+
+# File hasil import/export runtime
+*.zip
+*.bak
+
+# Skema database: sertakan database.sql, abaikan dump/data lainnya
+*.sql
+!database.sql

@@ -1,0 +1,39 @@
+# ============================================================
+# Si-BAHALAB - Konfigurasi Apache
+# ============================================================
+
+# --- Lindungi file sensitif ---
+<FilesMatch "^(\.env|\.env\.example|composer\.(json|lock)|database\.sql)$">
+    Require all denied
+</FilesMatch>
+
+# --- Cegah listing direktori ---
+Options -Indexes
+
+# --- Aktifkan mod_rewrite (jika dibutuhkan) ---
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Contoh: blokir akses langsung ke vendor & file tersembunyi
+    RewriteRule ^vendor/ - [F,L]
+    RewriteRule (^|/)\.(?!well-known) - [F,L]
+</IfModule>
+
+# --- Keamanan header (apabila HTTPS tersedia) ---
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# --- PHP: sembunyikan versi & matikan tampil error di produksi ---
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value error_reporting E_ALL
+    php_flag expose_php Off
+</IfModule>
+
+# --- Session: cookie lebih aman (aktifkan bila sudah pakai HTTPS) ---
+# php_value session.cookie_secure 1
+# php_value session.cookie_httponly 1
+# php_value session.cookie_samesite Lax
