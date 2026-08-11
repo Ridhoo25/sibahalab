@@ -1,0 +1,6 @@
+# Pastikan file penting selalu pakai LF, tidak diubah ke CRLF
+*.sh text eol=lf
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf
+.dockerignore text eol=lf
+*.yml text eol=lf

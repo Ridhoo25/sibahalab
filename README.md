@@ -52,6 +52,40 @@ Aplikasi web PHP untuk digitalisasi pengelolaan BHP: penerimaan, stok, distribus
 > File `bahalab.sql` dibuat dari dump database lokal (`bahalab`) sehingga berisi data nyata.
 > Akun pengguna yang aktif mengikuti data di dump tersebut.
 
+## Instalasi dengan Docker Desktop
+
+Project sudah dilengkapi `Dockerfile` dan `docker-compose.yml`. Nama database tetap `bahalab` dan struktur file tidak berubah.
+
+1. Pastikan **Docker Desktop** sudah terinstall dan berjalan.
+2. Buka terminal di folder project, lalu jalankan:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+3. Tunggu sampai container siap. Database `bahalab.sql` akan otomatis diimpor saat database pertama kali dibuat.
+4. Buka aplikasi: `http://localhost:8080`
+
+   - MySQL tersedia di port `3307` (host) / `3306` (container).
+   - Web server Apache tersedia di port `8080` (host) / `80` (container) agar tidak bentrok dengan Laragon.
+
+5. Untuk menghentikan:
+
+   ```bash
+   docker compose down
+   ```
+
+   Untuk menghentikan sekaligus menghapus data database:
+
+   ```bash
+   docker compose down -v
+   ```
+
+### Catatan Docker
+
+- `vendor/` tidak ikut di-commit. Saat container pertama kali jalan, `composer install` dijalankan otomatis oleh `docker-entrypoint.sh`.
+- Sesuai port MySQL container dipetakan ke `3307`, bukan `3306`, supaya tidak konflik dengan MySQL Laragon.
+
 ## Deploy ke Server (Shared Hosting)
 
 1. Push project ke repository (lihat bagian Git).
@@ -74,6 +108,7 @@ File yang sebaiknya di-commit:
 - `composer.json` **dan** `composer.lock` (versi dependensi terkunci)
 - `bahalab.sql` (dump struktur **+ data lokal**)
 - `.env.example` (template, **bukan** `.env` asli)
+- `Dockerfile`, `docker-compose.yml`, `.dockerignore`, `docker-entrypoint.sh` (support Docker Desktop)
 
 File yang otomatis diabaikan `.gitignore`:
 

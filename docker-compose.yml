@@ -1,0 +1,46 @@
+name: sibahalab
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: sibahalab-db
+    restart: unless-stopped
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: root_bahalab_2025
+      MYSQL_DATABASE: bahalab
+      TZ: Asia/Jakarta
+    ports:
+      - "3307:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./bahalab.sql:/docker-entrypoint-initdb.d/001-bahalab.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_bahalab_2025"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build: .
+    container_name: sibahalab-web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASS: root_bahalab_2025
+      DB_NAME: bahalab
+      TZ: Asia/Jakarta
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./:/var/www/html
+
+volumes:
+  dbdata:
