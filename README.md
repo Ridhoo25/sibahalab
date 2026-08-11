@@ -63,11 +63,18 @@ Project sudah dilengkapi `Dockerfile` dan `docker-compose.yml`. Nama database te
    docker compose up -d --build
    ```
 
+   Untuk pengembangan lokal (termasuk Adminer):
+
+   ```bash
+   docker compose --profile dev up -d --build
+   ```
+
 3. Tunggu sampai container siap. Database `bahalab.sql` akan otomatis diimpor saat database pertama kali dibuat.
 4. Buka aplikasi: `http://localhost:8080`
 
    - MySQL tersedia di port `3307` (host) / `3306` (container).
    - Web server Apache tersedia di port `8080` (host) / `80` (container) agar tidak bentrok dengan Laragon.
+   - Adminer (manajemen database via browser): `http://localhost:8081` — lalu login dengan Server = `db`, User = `root`, Password = `root_bahalab_2025`, Database = `bahalab`. MySQL memang tidak bisa dibuka lewat browser biasa, gunakan Adminer atau aplikasi klien MySQL.
 
 5. Untuk menghentikan:
 
@@ -85,6 +92,7 @@ Project sudah dilengkapi `Dockerfile` dan `docker-compose.yml`. Nama database te
 
 - `vendor/` tidak ikut di-commit. Saat container pertama kali jalan, `composer install` dijalankan otomatis oleh `docker-entrypoint.sh`.
 - Sesuai port MySQL container dipetakan ke `3307`, bukan `3306`, supaya tidak konflik dengan MySQL Laragon.
+- **Adminer diberi `profile: dev`** sehingga tidak ikut ter-deploy ke Dokploy/produksi. Jalankan hanya untuk pengembangan lokal.
 
 ## Deploy ke Server (Shared Hosting)
 
