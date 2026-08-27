@@ -1,15 +1,59 @@
 <?php
 require 'config.php';
 
+function buat_soal_captcha_register() {
+    $ops = ['+', '-', 'x'];
+    $op = $ops[array_rand($ops)];
+    if ($op === '+') {
+        $a = rand(1, 20);
+        $b = rand(1, 20);
+        $jawaban = $a + $b;
+    } elseif ($op === '-') {
+        $a = rand(1, 20);
+        $b = rand(1, $a);
+        $jawaban = $a - $b;
+    } else {
+        $a = rand(2, 9);
+        $b = rand(2, 9);
+        $jawaban = $a * $b;
+    }
+    $_SESSION['captcha_register_jawaban'] = $jawaban;
+    $_SESSION['captcha_register_soal'] = "$a $op $b";
+    return "$a $op $b";
+}
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SESSION['captcha_register_jawaban'])) {
+    buat_soal_captcha_register();
+}
+$soal_captcha = $_SESSION['captcha_register_soal'] ?? '?';
+
 if (isset($_POST['register'])) {
     if (!verify_csrf_token($_POST['_csrf_token'] ?? '')) { die('CSRF token tidak valid'); }
     $nama = mysqli_real_escape_string($conn, $_POST['nama']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = $_POST['password'];
     $password_confirm = $_POST['password_confirm'];
+    $jawabanCaptcha = (int) ($_POST['captcha'] ?? '');
+    $benarCaptcha = isset($_SESSION['captcha_register_jawaban']) && $jawabanCaptcha === (int) $_SESSION['captcha_register_jawaban'];
+
+    if (!$benarCaptcha) {
+        unset($_SESSION['captcha_register_jawaban']);
+        echo "<script>alert('Jawaban verifikasi salah, silakan coba lagi!');window.location='register.php';</script>";
+        exit;
+    }
 
     if ($password !== $password_confirm) {
         echo "<script>alert('Konfirmasi password tidak cocok');window.location='register.php';</script>";
+        exit;
+    }
+
+    if (strlen($password) < 8) {
+        echo "<script>alert('Password minimal 8 karakter');window.location='register.php';</script>";
+        exit;
+    }
+
+    if (!preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password)) {
+        echo "<script>alert('Password harus mengandung huruf besar, huruf kecil, dan angka');window.location='register.php';</script>";
         exit;
     }
 
@@ -23,6 +67,7 @@ if (isset($_POST['register'])) {
 
     mysqli_query($conn, "INSERT INTO sib_users (nama, email, password) VALUES ('$nama', '$email', '$password_hash')");
 
+    unset($_SESSION['captcha_register_jawaban']);
     echo "<script>alert('Registrasi berhasil, silakan login');window.location='index.php';</script>";
     exit;
 }
@@ -58,11 +103,18 @@ if (isset($_POST['register'])) {
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
-                    <input class="form-control" name="password" id="password" type="password" placeholder="Masukkan password" required />
+                    <input class="form-control" name="password" id="password" type="password" placeholder="Min. 8 karakter, huruf besar + kecil + angka" required />
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password_confirm">Konfirmasi Password</label>
                     <input class="form-control" name="password_confirm" id="password_confirm" type="password" placeholder="Ulangi password" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="captcha">Verifikasi Keamanan</label>
+                    <div class="login-captcha">
+                        <div class="login-captcha-soal"><?= htmlspecialchars($soal_captcha); ?> =</div>
+                        <input class="form-control login-captcha-input" name="captcha" id="captcha" type="text" inputmode="numeric" placeholder="?" required />
+                    </div>
                 </div>
                 <button class="btn btn-primary btn-block btn-lg" name="register">
                     <i class="fas fa-user-plus"></i> Daftar

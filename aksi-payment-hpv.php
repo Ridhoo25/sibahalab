@@ -2,7 +2,7 @@
 require 'config.php';
 require 'auth.php';
 
-$diproses_oleh = $_SESSION['nama'] ?? 'Admin';
+$diproses_oleh = mysqli_real_escape_string($conn, $_SESSION['nama'] ?? 'Admin');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi'])) {
     if (!verify_csrf_token($_POST['_csrf_token'] ?? '')) { die('CSRF token tidak valid'); }

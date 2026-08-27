@@ -10,8 +10,8 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_ROOT_PASSWORD: root_bahalab_2025
-      MYSQL_DATABASE: bahalab
+      MYSQL_ROOT_PASSWORD: ${DB_PASS:-root_bahalab_2025}
+      MYSQL_DATABASE: ${DB_NAME:-bahalab}
       TZ: Asia/Jakarta
     ports:
       - "3307:3306"
@@ -19,7 +19,7 @@ services:
       - dbdata:/var/lib/mysql
       - ./bahalab.sql:/docker-entrypoint-initdb.d/001-bahalab.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_bahalab_2025"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASS:-root_bahalab_2025}"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -33,8 +33,8 @@ services:
     environment:
       DB_HOST: db
       DB_USER: root
-      DB_PASS: root_bahalab_2025
-      DB_NAME: bahalab
+      DB_PASS: ${DB_PASS:-root_bahalab_2025}
+      DB_NAME: ${DB_NAME:-bahalab}
       TZ: Asia/Jakarta
     depends_on:
       db:

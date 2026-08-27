@@ -66,19 +66,6 @@ if (isset($_POST['login'])) {
             exit;
         }
 
-        if ($data['password'] === $password) {
-            $hashBaru = password_hash($password, PASSWORD_DEFAULT);
-            mysqli_query($conn, "UPDATE sib_users SET password='$hashBaru' WHERE email='$email'");
-
-            unset($_SESSION['captcha_jawaban']);
-            session_regenerate_id(true);
-            $_SESSION['log'] = true;
-            $_SESSION['nama'] = $data['nama'];
-            $_SESSION['last_activity'] = time();
-            header('location:stock.php');
-            exit;
-        }
-
         header('location:index.php?pesan=gagal');
         exit;
     }

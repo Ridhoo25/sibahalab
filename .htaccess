@@ -34,6 +34,7 @@ Options -Indexes
 </IfModule>
 
 # --- Session: cookie lebih aman (aktifkan bila sudah pakai HTTPS) ---
-# php_value session.cookie_secure 1
-# php_value session.cookie_httponly 1
-# php_value session.cookie_samesite Lax
+<IfModule mod_php.c>
+    php_value session.cookie_httponly 1
+    php_value session.cookie_samesite Lax
+</IfModule>
