@@ -33,6 +33,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/index.php"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   # Adminer hanya aktif di environment development (tidak ikut deploy ke Dokploy).
   # Jalankan di lokal dengan: docker compose --profile dev up -d
