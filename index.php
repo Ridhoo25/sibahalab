@@ -7,20 +7,16 @@ if (isset($_SESSION['log'])) {
 }
 
 function buat_soal_captcha() {
-    $ops = ['+', '-', 'x'];
+    $ops = ['+', '-'];
     $op = $ops[array_rand($ops)];
     if ($op === '+') {
         $a = rand(1, 20);
-        $b = rand(1, 20);
+        $b = rand(1, 20 - $a);
         $jawaban = $a + $b;
-    } elseif ($op === '-') {
+    } else {
         $a = rand(1, 20);
         $b = rand(1, $a);
         $jawaban = $a - $b;
-    } else {
-        $a = rand(2, 9);
-        $b = rand(2, 9);
-        $jawaban = $a * $b;
     }
     $_SESSION['captcha_jawaban'] = $jawaban;
     $_SESSION['captcha_soal'] = "$a $op $b";

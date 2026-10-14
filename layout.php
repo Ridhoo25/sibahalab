@@ -115,6 +115,16 @@
         </li>
     </ul>
 
+    <div class="sidebar-section">Pengaturan</div>
+    <ul class="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="users.php">
+                <i class="fas fa-users-cog nav-icon"></i>
+                Manajemen User
+            </a>
+        </li>
+    </ul>
+
     <div class="sidebar-footer">
         <div class="small">Inovasi:</div>
         Agus, S.Si., M.MKes., M.Si.<br>
